@@ -6,6 +6,7 @@ pub mod vector2;
 pub mod vector3;
 
 pub mod macros;
+mod packed_byte_array;
 
 use std::collections::BTreeMap;
 

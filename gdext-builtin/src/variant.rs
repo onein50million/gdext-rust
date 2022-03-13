@@ -58,6 +58,7 @@ mod conversions {
     use once_cell::sync::Lazy;
 
     use crate::{string::GodotString, vector2::Vector2, vector3::Vector3};
+    use crate::packed_byte_array::PackedByteArray;
 
     use super::Variant;
 
@@ -278,6 +279,60 @@ mod conversions {
                     .unwrap()
                 });
                 let mut vec = GodotString::new();
+                CONSTR(&mut vec as *mut _ as *mut _, v.as_ptr());
+                vec
+            }
+        }
+    }
+
+    impl From<PackedByteArray> for Variant {
+        fn from(mut s: PackedByteArray) -> Self {
+            unsafe {
+                static CONSTR: Lazy<
+                    unsafe extern "C" fn(sys::GDNativeVariantPtr, sys::GDNativeTypePtr),
+                > = Lazy::new(|| unsafe {
+                    interface_fn!(get_variant_from_type_constructor)(
+                        sys::GDNativeVariantType_GDNATIVE_VARIANT_TYPE_PACKED_BYTE_ARRAY,
+                    )
+                        .unwrap()
+                });
+                let mut v = Variant::uninit();
+                CONSTR(v.as_mut_ptr(), s.as_mut_ptr());
+                v
+            }
+        }
+    }
+
+    impl From<&PackedByteArray> for Variant {
+        fn from(s: &PackedByteArray) -> Self {
+            unsafe {
+                static CONSTR: Lazy<
+                    unsafe extern "C" fn(sys::GDNativeVariantPtr, sys::GDNativeTypePtr),
+                > = Lazy::new(|| unsafe {
+                    interface_fn!(get_variant_from_type_constructor)(
+                        sys::GDNativeVariantType_GDNATIVE_VARIANT_TYPE_PACKED_BYTE_ARRAY,
+                    )
+                        .unwrap()
+                });
+                let mut v = Variant::uninit();
+                CONSTR(v.as_mut_ptr(), s.as_ptr());
+                v
+            }
+        }
+    }
+
+    impl From<&Variant> for PackedByteArray {
+        fn from(v: &Variant) -> Self {
+            unsafe {
+                static CONSTR: Lazy<
+                    unsafe extern "C" fn(sys::GDNativeTypePtr, sys::GDNativeVariantPtr),
+                > = Lazy::new(|| unsafe {
+                    interface_fn!(get_variant_to_type_constructor)(
+                        sys::GDNativeVariantType_GDNATIVE_VARIANT_TYPE_PACKED_BYTE_ARRAY,
+                    )
+                        .unwrap()
+                });
+                let mut vec = PackedByteArray::new();
                 CONSTR(&mut vec as *mut _ as *mut _, v.as_ptr());
                 vec
             }
