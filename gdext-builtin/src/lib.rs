@@ -4,9 +4,9 @@ pub mod string;
 pub mod variant;
 pub mod vector2;
 pub mod vector3;
+pub mod packed_byte_array;
 
 pub mod macros;
-pub mod packed_byte_array;
 
 use std::collections::BTreeMap;
 
