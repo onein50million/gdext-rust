@@ -3,7 +3,7 @@ use gdext_sys::{self as sys, interface_fn};
 use crate::PtrCallArg;
 
 #[derive(Clone)]
-pub struct PackedByteArray(Vec<u8>);
+pub struct PackedByteArray(pub Vec<u8>);
 
 impl PackedByteArray{
     #[doc(hidden)]
