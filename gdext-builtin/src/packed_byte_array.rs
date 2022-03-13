@@ -34,6 +34,20 @@ impl PackedByteArray{
     }
 }
 
+impl Drop for PackedByteArray {
+    fn drop(&mut self) {
+        unsafe {
+            static DESTR: Lazy<unsafe extern "C" fn(sys::GDNativeTypePtr)> = Lazy::new(|| unsafe {
+                interface_fn!(variant_get_ptr_destructor)(
+                    sys::GDNativeVariantType_GDNATIVE_VARIANT_TYPE_PACKED_BYTE_ARRAY,
+                )
+                    .unwrap()
+            });
+            DESTR(self.as_mut_ptr());
+        }
+    }
+}
+
 impl PtrCallArg for PackedByteArray{
     unsafe fn from_ptr_call_arg(arg: *const gdext_sys::GDNativeTypePtr) -> Self {
         Clone::clone(&*(arg as *mut PackedByteArray))
