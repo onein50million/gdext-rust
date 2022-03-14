@@ -53,6 +53,12 @@ impl PropertyInfoBuilder for Vector3 {
     }
 }
 
+impl PropertyInfoBuilder for () {
+    fn variant_type() -> gdext_sys::GDNativeVariantType {
+        gdext_sys::GDNativeVariantType_GDNATIVE_VARIANT_TYPE_NIL
+    }
+}
+
 macro_rules! property_info_integer {
     ($type:ty, $meta:ident) => {
         impl PropertyInfoBuilder for $type {
