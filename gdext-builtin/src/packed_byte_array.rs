@@ -2,6 +2,7 @@ use once_cell::sync::Lazy;
 use gdext_sys::{self as sys, interface_fn};
 use crate::PtrCallArg;
 
+#[repr(C, align(8))]
 #[derive(Clone, Debug)]
 pub struct PackedByteArray(pub Vec<u8>);
 
