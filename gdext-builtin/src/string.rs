@@ -141,7 +141,7 @@ impl PtrCallArg for GodotString {
     }
 
     unsafe fn to_ptr_call_arg(self, arg: gdext_sys::GDNativeTypePtr) {
-        std::ptr::write(arg as *mut GodotString, self);
+            std::ptr::write(arg as *mut GodotString, self);
     }
 }
 

@@ -4,6 +4,7 @@ use gdext_sys::{self as sys, interface_fn};
 
 pub mod macros;
 pub mod property_info;
+pub mod ref_counted;
 
 pub trait GodotClass {
     type Base: GodotClass;
