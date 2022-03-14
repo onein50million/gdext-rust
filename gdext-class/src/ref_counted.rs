@@ -1,10 +1,9 @@
 use std::ffi::{CString};
 use std::ptr::null;
-use once_cell::sync::Lazy;
 use gdext_sys::{self as sys, get_interface};
 use crate::GodotClass;
 
-pub struct RefCounted(sys::GDNativeObjectPtr);
+pub struct RefCounted(pub sys::GDNativeObjectPtr);
 
 impl GodotClass for RefCounted {
     type Base = RefCounted;
