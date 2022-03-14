@@ -2,6 +2,8 @@ use std::mem::MaybeUninit;
 
 use gdext_sys::{self as sys, interface_fn};
 
+use crate::PtrCallArg;
+
 #[cfg(not(feature = "real_is_double"))]
 const SIZE_IN_BYTES: u64 = 24;
 #[cfg(feature = "real_is_double")]
@@ -50,6 +52,16 @@ impl Drop for Variant {
         unsafe {
             interface_fn!(variant_destroy)(self.as_ptr());
         }
+    }
+}
+
+impl PtrCallArg for Variant {
+    unsafe fn from_ptr_call_arg(arg: *const gdext_sys::GDNativeTypePtr) -> Self {
+        Clone::clone(&*(arg as *mut Variant))
+    }
+
+    unsafe fn to_ptr_call_arg(self, arg: gdext_sys::GDNativeTypePtr) {
+            std::ptr::write(arg as *mut Variant, self);
     }
 }
 

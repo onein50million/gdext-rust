@@ -1,5 +1,6 @@
 use std::ffi::CStr;
 
+use gdext_builtin::variant::Variant;
 use gdext_builtin::{string::GodotString, vector2::Vector2, vector3::Vector3};
 use gdext_builtin::packed_byte_array::PackedByteArray;
 
@@ -31,6 +32,13 @@ impl PropertyInfoBuilder for PackedByteArray {
         gdext_sys::GDNativeVariantType_GDNATIVE_VARIANT_TYPE_PACKED_BYTE_ARRAY
     }
 }
+impl PropertyInfoBuilder for Variant {
+    fn variant_type() -> gdext_sys::GDNativeVariantType {
+        gdext_sys::GDNativeVariantType_GDNATIVE_VARIANT_TYPE_NIL
+    }
+}
+
+
 
 //
 /*
