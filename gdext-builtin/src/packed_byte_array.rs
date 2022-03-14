@@ -2,7 +2,7 @@ use once_cell::sync::Lazy;
 use gdext_sys::{self as sys, interface_fn};
 use crate::PtrCallArg;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct PackedByteArray(pub Vec<u8>);
 
 impl PackedByteArray{
