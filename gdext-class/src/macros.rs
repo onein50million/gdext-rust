@@ -221,7 +221,7 @@ macro_rules! gdext_wrap_method {
                 &mut self
                 $(,$pname : $pty)*
                 $(,#[opt] $opt_pname : $opt_pty)*
-            )
+            ) -> ()
         )
     };
     // immutable without return type
@@ -240,7 +240,7 @@ macro_rules! gdext_wrap_method {
                 &self
                 $(,$pname : $pty)*
                 $(,#[opt] $opt_pname : $opt_pty)*
-            )
+            ) -> ()
         )
     };
 }
