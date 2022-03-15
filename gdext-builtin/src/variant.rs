@@ -93,20 +93,9 @@ mod conversions {
     }
 
     impl From<()> for Variant{
-        fn from(value: ()) -> Self {
-            unsafe {
-                static CONSTR: Lazy<
-                    unsafe extern "C" fn(sys::GDNativeVariantPtr, sys::GDNativeTypePtr),
-                > = Lazy::new(|| unsafe {
-                    interface_fn!(get_variant_from_type_constructor)(
-                        sys::GDNativeVariantType_GDNATIVE_VARIANT_TYPE_NIL,
-                    )
-                    .unwrap()
-                });
-                let mut variant = Variant::uninit();
-                CONSTR(variant.as_mut_ptr(), &value as *const _ as *mut _);
-                variant
-            }
+        fn from(_value: ()) -> Self {
+            let variant = Variant::nil();
+            variant
         }
     }
 
