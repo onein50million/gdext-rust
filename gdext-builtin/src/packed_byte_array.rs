@@ -1,4 +1,5 @@
-use std::{ffi::{CString}, mem::MaybeUninit};
+use core::slice;
+use std::{ffi::{CString}, mem::MaybeUninit, ops::{Index, IndexMut}};
 
 use once_cell::sync::Lazy;
 use gdext_sys::{self as sys, interface_fn};
@@ -18,6 +19,47 @@ impl PackedByteArray{
         self.0.as_ptr() as *mut _
     }
 
+    pub fn data_as_ptr(&self) -> *const u8{
+        unsafe{
+            u64::from_ne_bytes(self.0.assume_init()[8..][..8].try_into().unwrap()) as _
+        }
+
+    }
+    pub fn data_as_mut_ptr(&mut self) -> *mut u8{
+        unsafe{
+            u64::from_ne_bytes(self.0.assume_init()[8..][..8].try_into().unwrap()) as _
+        }
+
+    }
+    // pub fn test0(&self){
+    //     unsafe{
+    //         println!("{:?}", self.0.assume_init())
+    //     }
+    // }
+    // pub fn testa(&self) -> u64{
+    //     unsafe{
+    //         u64::from_ne_bytes(self.0.assume_init()[..8].try_into().unwrap())
+    //     }
+    // }
+    // pub fn testb(&self) -> u64{
+    //     unsafe{
+    //         u64::from_ne_bytes(self.0.assume_init()[8..][..8].try_into().unwrap())
+    //     }
+    // }
+    // pub fn testc(&self) -> u64{
+    //     unsafe{
+    //         u64::from_ne_bytes(std::ptr::read(
+    //             u64::from_ne_bytes(self.0.assume_init()[..8].try_into().unwrap()) as *mut _
+    //         ) )
+    //     }
+    // }
+    // pub fn testd(&self) -> u64{
+    //     unsafe{
+    //         u64::from_ne_bytes(std::ptr::read(
+    //             u64::from_ne_bytes(self.0.assume_init()[8..][..8].try_into().unwrap()) as *mut _
+    //         ) )
+    //     }
+    // }
     pub fn new() -> Self {
         unsafe {
             let mut byte_array = Self(MaybeUninit::uninit());
@@ -35,7 +77,7 @@ impl PackedByteArray{
             byte_array
         }
     }
-    pub fn resize(&mut self, value: u8){
+    pub fn resize(&mut self, value: usize){
         unsafe{
             let args = [value];
             let p_args = args.as_ptr();
@@ -63,6 +105,42 @@ impl PackedByteArray{
             let mut return_value = 0;
             size_fn(self.as_ptr(), std::ptr::null(), &mut return_value as *mut _ as _, 0);
             return_value
+        }
+    }
+
+    pub fn get_vec(&self) -> Vec<u8>{
+        unsafe{
+            let mut vec: Vec<u8> = Vec::with_capacity(self.size() as usize);
+            vec.as_mut_ptr().copy_from_nonoverlapping(self.data_as_ptr(), self.size() as usize);
+            vec.set_len(self.size() as usize);
+            vec
+        }
+    }
+    pub fn from_slice(&mut self, slice: &[u8]){
+        self.resize(slice.len() as usize);
+        unsafe{
+            slice.as_ptr().copy_to_nonoverlapping(self.data_as_mut_ptr(), self.size() as usize);
+        }
+    }
+}
+
+impl Index<usize> for PackedByteArray{
+    type Output = u8;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        assert!(index < self.size() as usize);
+        unsafe{
+            &*self.data_as_ptr().offset(index as isize)
+        }
+    }
+}
+
+impl IndexMut<usize> for PackedByteArray{
+
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        assert!(index < self.size() as usize);
+        unsafe{
+            &mut*self.data_as_mut_ptr().offset(index as isize)
         }
     }
 }
