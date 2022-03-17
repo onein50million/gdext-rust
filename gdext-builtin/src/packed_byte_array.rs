@@ -1,4 +1,3 @@
-use core::slice;
 use std::{ffi::{CString}, mem::MaybeUninit, ops::{Index, IndexMut}};
 
 use once_cell::sync::Lazy;

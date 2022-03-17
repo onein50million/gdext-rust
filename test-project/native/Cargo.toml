@@ -12,3 +12,4 @@ crate-type = ["cdylib"]
 gdext-sys = { path = "../../gdext-sys" }
 gdext-builtin = { path = "../../gdext-builtin" }
 gdext-class = { path = "../../gdext-class" }
+gdext-codegen = { path = "../../gdext-codegen" }
